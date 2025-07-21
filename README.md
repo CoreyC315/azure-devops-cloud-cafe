@@ -63,3 +63,34 @@ Start the Node.js Express server:
 ```bash
 node app.js
 
+The application will be accessible at http://localhost:3000. You will see console output confirming the port and endpoints.
+
+Testing Endpoints
+Once the application is running, open your web browser and navigate to:
+
+http://localhost:3000/
+
+You should see the interactive "Cloud Café" frontend page. From this interface, you can:
+
+View the menu, which is dynamically loaded from the /menu API endpoint.
+
+Select a coffee and quantity to place an order, which sends a POST request to the /order API endpoint.
+
+Enter an Order ID to check its status, which queries the /status/:id API endpoint.
+
+(Optional: You can still test the backend API endpoints directly if needed, e.g., using curl for the POST request, but the frontend provides a complete user experience.)
+
+Next Steps (Cloud Deployment) ☁️
+The next phases of this project will focus on deploying and managing the Cloud Café application in Azure:
+
+Containerization with Docker
+
+Pushing to Azure Container Registry (ACR)
+
+Deploying to Azure Kubernetes Service (AKS)
+
+Implementing Autoscaling
+
+Setting up Monitoring with Azure Monitor
+
+Simulating Production Traffic
