@@ -94,3 +94,53 @@ Implementing Autoscaling
 Setting up Monitoring with Azure Monitor
 
 Simulating Production Traffic
+
+Phase 2: Containerization with Docker 🐳
+This phase packages the Cloud Café application and its dependencies into a portable Docker image, ensuring consistent execution across different environments.
+
+Dockerfile Explained
+The Dockerfile defines the steps to build the application's container image using a multi-stage approach for efficiency:
+
+Dockerfile
+
+# Stage 1: Build (for installing dependencies)
+FROM node:18-alpine AS builder # Uses a lightweight Node.js base image for building
+WORKDIR /app                    # Sets the working directory inside the container
+COPY package*.json ./           # Copies package files for dependency caching
+RUN npm install --omit=dev      # Installs only production dependencies
+
+# Stage 2: Run (for the final application image)
+FROM node:18-alpine             # Uses a smaller base image for the final runtime
+WORKDIR /app                    # Sets the working directory
+COPY --from=builder /app/node_modules ./node_modules # Copies installed modules from builder stage
+# Copy the rest of your application code (app.js, public/, etc.)
+COPY . .
+EXPOSE 3000                     # Declares that the container listens on port 3000
+CMD ["node", "app.js"]          # Specifies the command to run the application
+Building the Docker Image
+Ensure Docker Desktop is running on your machine. From the root of your project directory, execute the following command to build the Docker image:
+
+Bash
+
+docker build -t cloud-cafe-app:latest .
+docker build: Initiates the image build process.
+
+-t cloud-cafe-app:latest: Tags the image with the name cloud-cafe-app and version latest.
+
+.: Specifies that the Dockerfile is in the current directory.
+
+Testing the Docker Image Locally
+After a successful build, you can run a container from your newly created image and test the application locally:
+
+Bash
+
+docker run -p 3000:3000 cloud-cafe-app:latest
+docker run: Creates and starts a container from the specified image.
+
+-p 3000:3000: Maps port 3000 on your host machine to port 3000 inside the container, allowing external access.
+
+cloud-cafe-app:latest: Specifies the Docker image to use.
+
+Open your web browser and navigate to http://localhost:3000/. You should see your Cloud Café frontend, demonstrating the app running successfully within its Docker container. To stop the container, press Ctrl+C in the terminal where it's running.
+
+
