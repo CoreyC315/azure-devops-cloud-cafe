@@ -1,0 +1,23 @@
+{
+  "name": "azure-devops-cloud-cafe",
+  "version": "1.0.0",
+  "description": "A scalable coffee order management app deployed on Azure Kubernetes Service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoreyC315/azure-devops-cloud-cafe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CoreyC315/azure-devops-cloud-cafe/issues"
+  },
+  "homepage": "https://github.com/CoreyC315/azure-devops-cloud-cafe#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
