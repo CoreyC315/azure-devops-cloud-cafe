@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Café ☕</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Cloud Café!</h1>
+
+        <section id="menu-section">
+            <h2>Our Menu</h2>
+            <ul id="menu-list">
+                <li>Loading menu...</li>
+            </ul>
+        </section>
+
+        <section id="order-section">
+            <h2>Place Your Order</h2>
+            <form id="order-form">
+                <label for="coffee-select">Select Coffee:</label>
+                <select id="coffee-select" required>
+                    <option value="">-- Please select --</option>
+                </select>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" value="1" min="1" required>
+
+                <button type="submit">Place Order</button>
+            </form>
+            <div id="order-status" class="message"></div>
+        </section>
+
+        <section id="check-status-section">
+            <h2>Check Order Status</h2>
+            <form id="status-form">
+                <label for="order-id-input">Order ID:</label>
+                <input type="text" id="order-id-input" placeholder="e.g., 123456" required>
+                <button type="submit">Check Status</button>
+            </form>
+            <div id="status-result" class="message"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

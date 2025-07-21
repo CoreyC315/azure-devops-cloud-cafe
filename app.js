@@ -1,11 +1,13 @@
-// Import the Express framework
 const express = require('express');
-const app = express(); // Create an Express application instance
-const PORT = process.env.PORT || 3000; // Define the port, defaulting to 3000
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON request bodies
-// This is essential for handling POST requests with JSON data (like ordering coffee)
 app.use(express.json());
+
+// ⚡️ IMPORTANT: This line must be BEFORE your API routes (e.g., /menu, /order)
+// Middleware to serve static files from the 'public' directory
+app.use(express.static('public'));
 
 // --- Endpoints for Cloud Café ---
 
