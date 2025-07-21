@@ -70,7 +70,7 @@ app.use((req, res) => {
 // Start the server
 app.listen(PORT, () => {
     console.log(`Cloud Café App listening on port ${PORT}`);
-    console.log(`Access menu at: http://localhost:${PORT}/menu`);
+    console.log(`Access menu and prices at: http://localhost:${PORT}`);
     console.log(`Place order with POST to: http://localhost:${PORT}/order`);
     console.log(`Check order status at: http://localhost:${PORT}/status/:id`);
 });
