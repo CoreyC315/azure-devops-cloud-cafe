@@ -62,4 +62,138 @@ Start the Node.js Express server:
 
 ```bash
 node app.js
+```
+The application will be accessible at http://localhost:3000. You will see console output confirming the port and endpoints.
+
+Testing Endpoints
+Once the application is running, open your web browser and navigate to:
+
+http://localhost:3000/
+
+You should see the interactive "Cloud Café" frontend page. From this interface, you can:
+
+View the menu, which is dynamically loaded from the /menu API endpoint.
+
+Select a coffee and quantity to place an order, which sends a POST request to the /order API endpoint.
+
+Enter an Order ID to check its status, which queries the /status/:id API endpoint.
+
+(Optional: You can still test the backend API endpoints directly if needed, e.g., using curl for the POST request, but the frontend provides a complete user experience.)
+
+Next Steps (Cloud Deployment) ☁️
+The next phases of this project will focus on deploying and managing the Cloud Café application in Azure:
+
+Containerization with Docker
+
+Pushing to Azure Container Registry (ACR)
+
+Deploying to Azure Kubernetes Service (AKS)
+
+Implementing Autoscaling
+
+Setting up Monitoring with Azure Monitor
+
+Simulating Production Traffic
+
+
+
+
+
+
+Phase 2: Containerization with Docker 🐳
+This phase packages the Cloud Café application and its dependencies into a portable Docker image, ensuring consistent execution across different environments.
+
+Dockerfile Explained
+The Dockerfile defines the steps to build the application's container image using a multi-stage approach for efficiency:
+
+Dockerfile
+
+# Stage 1: Build (for installing dependencies)
+FROM node:18-alpine AS builder # Uses a lightweight Node.js base image for building
+WORKDIR /app                    # Sets the working directory inside the container
+COPY package*.json ./           # Copies package files for dependency caching
+RUN npm install --omit=dev      # Installs only production dependencies
+
+# Stage 2: Run (for the final application image)
+FROM node:18-alpine             # Uses a smaller base image for the final runtime
+WORKDIR /app                    # Sets the working directory
+COPY --from=builder /app/node_modules ./node_modules # Copies installed modules from builder stage
+# Copy the rest of your application code (app.js, public/, etc.)
+COPY . .
+EXPOSE 3000                     # Declares that the container listens on port 3000
+CMD ["node", "app.js"]          # Specifies the command to run the application
+Building the Docker Image
+Ensure Docker Desktop is running on your machine. From the root of your project directory, execute the following command to build the Docker image:
+
+Bash
+
+docker build -t cloud-cafe-app:latest .
+docker build: Initiates the image build process.
+
+-t cloud-cafe-app:latest: Tags the image with the name cloud-cafe-app and version latest.
+
+.: Specifies that the Dockerfile is in the current directory.
+
+Testing the Docker Image Locally
+After a successful build, you can run a container from your newly created image and test the application locally:
+
+Bash
+
+docker run -p 3000:3000 cloud-cafe-app:latest
+docker run: Creates and starts a container from the specified image.
+
+-p 3000:3000: Maps port 3000 on your host machine to port 3000 inside the container, allowing external access.
+
+cloud-cafe-app:latest: Specifies the Docker image to use.
+
+Phase 3: Push to Azure Container Registry (ACR) ☁️
+This phase involves creating a private Docker registry in Azure and pushing the containerized Cloud Café application image to it, making it accessible for deployment to Azure services like AKS.
+
+Creating Azure Container Registry
+The Azure Container Registry was created via the Azure Portal:
+
+Log in to Azure Portal (portal.azure.com).
+
+Search for and navigate to "Container Registries".
+
+Click "+ Create" and fill in the following details:
+
+Resource Group: CloudCafeRG (or create new).
+
+Registry name: A globally unique name (e.g., cloudcaferegistrycorey).
+
+Location: Your chosen Azure region (e.g., East US).
+
+SKU: Basic.
+
+After creation, navigate to the ACR resource in the portal. Under "Settings", go to "Access keys" and toggle "Admin user" to Enabled. Note down the Login server, Username, and Password.
+
+Logging In and Tagging
+From your local machine, authenticate Docker with your ACR and tag your local image for the registry:
+
+Login to ACR from Docker:
+
+Bash
+
+docker login <ACR_LOGIN_SERVER>
+(Use the Username and Password obtained from ACR Access keys in the portal).
+Alternatively, use az acr login --name <your_acr_name> if Azure CLI is logged in.
+
+Tag the local Docker image:
+
+Bash
+
+docker tag cloud-cafe-app:latest <ACR_LOGIN_SERVER>/cloud-cafe-app:latest
+(Replace <ACR_LOGIN_SERVER> with your actual ACR login server, e.g., cloudcaferegistrycorey.azurecr.io).
+
+Pushing the Image
+Push the tagged Docker image to your Azure Container Registry:
+
+Bash
+
+docker push <ACR_LOGIN_SERVER>/cloud-cafe-app:latest
+You can verify the image's presence by navigating to your ACR resource in the Azure Portal and checking the "Repositories" blade.
+
+Open your web browser and navigate to http://localhost:3000/. You should see your Cloud Café frontend, demonstrating the app running successfully within its Docker container. To stop the container, press Ctrl+C in the terminal where it's running.
+
 
