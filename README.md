@@ -95,6 +95,11 @@ Setting up Monitoring with Azure Monitor
 
 Simulating Production Traffic
 
+
+
+
+
+
 Phase 2: Containerization with Docker 🐳
 This phase packages the Cloud Café application and its dependencies into a portable Docker image, ensuring consistent execution across different environments.
 
