@@ -146,6 +146,54 @@ docker run: Creates and starts a container from the specified image.
 
 cloud-cafe-app:latest: Specifies the Docker image to use.
 
+Phase 3: Push to Azure Container Registry (ACR) ☁️
+This phase involves creating a private Docker registry in Azure and pushing the containerized Cloud Café application image to it, making it accessible for deployment to Azure services like AKS.
+
+Creating Azure Container Registry
+The Azure Container Registry was created via the Azure Portal:
+
+Log in to Azure Portal (portal.azure.com).
+
+Search for and navigate to "Container Registries".
+
+Click "+ Create" and fill in the following details:
+
+Resource Group: CloudCafeRG (or create new).
+
+Registry name: A globally unique name (e.g., cloudcaferegistrycorey).
+
+Location: Your chosen Azure region (e.g., East US).
+
+SKU: Basic.
+
+After creation, navigate to the ACR resource in the portal. Under "Settings", go to "Access keys" and toggle "Admin user" to Enabled. Note down the Login server, Username, and Password.
+
+Logging In and Tagging
+From your local machine, authenticate Docker with your ACR and tag your local image for the registry:
+
+Login to ACR from Docker:
+
+Bash
+
+docker login <ACR_LOGIN_SERVER>
+(Use the Username and Password obtained from ACR Access keys in the portal).
+Alternatively, use az acr login --name <your_acr_name> if Azure CLI is logged in.
+
+Tag the local Docker image:
+
+Bash
+
+docker tag cloud-cafe-app:latest <ACR_LOGIN_SERVER>/cloud-cafe-app:latest
+(Replace <ACR_LOGIN_SERVER> with your actual ACR login server, e.g., cloudcaferegistrycorey.azurecr.io).
+
+Pushing the Image
+Push the tagged Docker image to your Azure Container Registry:
+
+Bash
+
+docker push <ACR_LOGIN_SERVER>/cloud-cafe-app:latest
+You can verify the image's presence by navigating to your ACR resource in the Azure Portal and checking the "Repositories" blade.
+
 Open your web browser and navigate to http://localhost:3000/. You should see your Cloud Café frontend, demonstrating the app running successfully within its Docker container. To stop the container, press Ctrl+C in the terminal where it's running.
 
 
