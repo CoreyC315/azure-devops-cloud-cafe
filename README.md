@@ -1,11 +1,20 @@
-# azure-devops-cloud-cafe
-A scalable coffee order management app deployed on Azure Kubernetes Service.
+# Cloud Café: Scalable Order Management with Azure Kubernetes Service
+
+This project aims to build a highly available and scalable coffee order management web application, "Cloud Café," and deploy it using Azure Kubernetes Service (AKS). It demonstrates key cloud engineering and DevOps principles, including containerization, local development, version control, and preparing for cloud deployment.
 
 ## Table of Contents
 
 - [Project Title and Description](#project-title-and-description-)
 - [Technologies Used](#technologies-used-)
-    ## Technologies Used
+- [Getting Started (Local Development)](#getting-started-local-development-)
+  - [Prerequisites](#prerequisites)
+  - [Project Setup](#project-setup)
+  - [Running the Application Locally](#running-the-application-locally)
+  - [Testing Endpoints](#testing-endpoints)
+- [Next Steps (Cloud Deployment)](#next-steps-cloud-deployment-)
+
+
+## Technologies Used
 
 * **Node.js**: JavaScript runtime for server-side development.
 * **Express.js**: Fast, unopinionated, minimalist web framework for Node.js.
@@ -13,8 +22,8 @@ A scalable coffee order management app deployed on Azure Kubernetes Service.
 * **GitHub**: Cloud-based hosting for Git repositories.
 * **VS Code**: Integrated Development Environment (IDE).
 * **npm**: Node.js package manager.
-- [Getting Started (Local Development)](#getting-started-local-development-)
-    ## Getting Started (Local Development)
+
+## Getting Started (Local Development)
 
 This section guides you through setting up and running the Cloud Café application on your local machine.
 
@@ -54,9 +63,3 @@ Start the Node.js Express server:
 ```bash
 node app.js
 
-    
-  - [Prerequisites](#prerequisites)
-  - [Project Setup](#project-setup)
-  - [Running the Application Locally](#running-the-application-locally)
-  - [Testing Endpoints](#testing-endpoints)
-- [Next Steps (Cloud Deployment)](#next-steps-cloud-deployment-)
