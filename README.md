@@ -197,3 +197,127 @@ You can verify the image's presence by navigating to your ACR resource in the Az
 Open your web browser and navigate to http://localhost:3000/. You should see your Cloud Café frontend, demonstrating the app running successfully within its Docker container. To stop the container, press Ctrl+C in the terminal where it's running.
 
 
+Phase 4: Deploy to Azure Kubernetes Service (AKS) 🚀 (Updated)
+This phase guides you through creating your AKS cluster, connecting to it, defining how your application runs in Kubernetes, and finally deploying it for public access.
+
+Scaling Up the AKS Cluster
+To manage costs, the AKS cluster nodes can be scaled down when not in use. Before deployment, ensure the cluster is scaled up to at least one node.
+
+Start/Scale Up the Cluster:
+
+Bash
+
+az aks scale --resource-group CloudCafeRG --name <YOUR_AKS_CLUSTER_NAME> --node-count 1
+Replace <YOUR_AKS_CLUSTER_NAME> with your actual AKS cluster name.
+
+Verify Cluster Status:
+Once the scale operation is complete, verify the node(s) are ready:
+
+Bash
+
+az aks get-credentials --resource-group CloudCafeRG --name <YOUR_AKS_CLUSTER_NAME>
+kubectl get nodes
+Confirm that at least one node shows a Ready status.
+
+Connect to Your AKS Cluster (from your Local Machine)
+Once your AKS cluster deployment is complete, you need to configure kubectl on your local machine to interact with it.
+
+Open your VS Code terminal.
+
+Log in to Azure CLI if you're not already:
+
+Bash
+
+az login
+Get the credentials for your AKS cluster. Replace <YOUR_AKS_CLUSTER_NAME> with the actual name you used (e.g., cloud-cafe-aks-cluster):
+
+Bash
+
+az aks get-credentials --resource-group CloudCafeRG --name <YOUR_AKS_CLUSTER_NAME>
+This command updates your local kubectl configuration to point to your new AKS cluster.
+
+Verify Connection:
+Test if kubectl can connect and list your node(s):
+
+Bash
+
+kubectl get nodes
+You should see your node(s) listed with a Ready status.
+
+Define Kubernetes Deployment and Service YAMLs
+You'll create the Kubernetes manifest files (.yaml files) that tell AKS how to deploy and expose your application. These files should be in the root of your azure-devops-cloud-cafe project.
+
+Create deployment.yaml:
+This file describes how to run your application's containers.
+
+YAML
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-cafe-app-deployment
+  labels:
+    app: cloud-cafe
+spec:
+  replicas: 1 # We'll start with 1 replica; we can scale this later
+  selector:
+    matchLabels:
+      app: cloud-cafe
+  template:
+    metadata:
+      labels:
+        app: cloud-cafe
+    spec:
+      containers:
+      - name: cloud-cafe-app
+        image: <ACR_LOGIN_SERVER>/cloud-cafe-app:latest # IMPORTANT: Replace with your actual ACR login server
+        ports:
+        - containerPort: 3000
+Remember to replace <ACR_LOGIN_SERVER> with the actual login server name of your ACR (e.g., cloudcaferegistrycorey.azurecr.io).
+
+Create service.yaml:
+This file defines how to expose your application to the internet.
+
+YAML
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-cafe-app-service
+spec:
+  type: LoadBalancer # This tells Azure to create a public Azure Load Balancer
+  selector:
+    app: cloud-cafe
+  ports:
+    - protocol: TCP
+      port: 80     # The external port the service will listen on (standard HTTP)
+      targetPort: 3000 # The internal port the container is listening on (from your Dockerfile)
+Deploy to AKS
+Now, apply these Kubernetes manifest files to your AKS cluster.
+
+Apply the Deployment:
+In your VS Code terminal (ensure you are in your project's root directory: azure-devops-cloud-cafe):
+
+Bash
+
+kubectl apply -f deployment.yaml
+Apply the Service:
+
+Bash
+
+kubectl apply -f service.yaml
+It might take a few minutes for Azure to provision the Load Balancer and assign a public IP address.
+
+Get the Application's Public IP and Access it
+You can check the status of your service and get its external IP address:
+
+Bash
+
+kubectl get service cloud-cafe-app-service
+Keep running this command every 30 seconds or so. Look for the EXTERNAL-IP column. It will initially show <pending>. Once a public IP address appears, copy it.
+
+Finally, open your web browser and navigate to:
+
+http://<EXTERNAL_IP_ADDRESS>
+
+You should now see your "Cloud Café" application running live from Azure Kubernetes Service!
